@@ -4,6 +4,7 @@ include::VERSION[]
 :doctype: book
 :media: print
 :optimize:
+:revdate: {docdate}
 :sectanchors:
 :source-highlighter: rouge
 :title-page:
