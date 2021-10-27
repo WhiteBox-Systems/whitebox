@@ -43,6 +43,12 @@ The first thing to do is to install the plugin for your editor so that WhiteBox 
 
 Once you've installed it, you can connect it to WhiteBox and start editing code!
 
+// TODO: library installation
+TIP: If installing on Linux, run the following commands from the `whitebox` directory: +
+`chmod +x whitebox` +
+`chmod +x dbg_run` +
+This will ensure the executables can run properly.
+
 === Editor plugin setup
 WhiteBox can connect to several editors via a plugin.
 Generally we’ve tried to go with the standard approach for each editor.
@@ -102,11 +108,11 @@ _Location:_ `whitebox/editor_plugins/emacs`
 
 If you’re using a particular plugin manager then follow the normal instructions for that.
 
-Otherwise put the following command in your `.emacs` or `init.el` config file to happen every time Emacs is opened:
+Otherwise put the following command in your `.emacs` or `init.el` config file to run every time Emacs is opened:
 
 [source,elisp]
 ----
-(load-file /path/to/whitebox/editor_plugins/emacs/whitebox.el)
+(load-file "/path/to/whitebox/editor_plugins/emacs/whitebox.el")
 ----
 // M-: to eval the expr
 
@@ -429,6 +435,28 @@ These are not expected or intended to be key debugging tools, but may be of inte
 
 
 == Troubleshooting
+
+=== Compilation Errors
+
+==== `#include <X>` file not found
+WhiteBox's internal compiler (clang) can't find the file.
+This may be because the file doesn't exist, but it is more likely that the directory that contains the file is not among the searched include paths.
+To add the directory to the include paths, go to `Main menu > Compiler > Preferences`, and add a compiler flag such as:
+
+----
+-I <1>
+/path/to/include/file/directory <2>
+----
+<1> Make sure that there is a newline between the `-I` and the path.
+<2> This is the path to the directory for the file, not to the file itself.
+
+
+If you are unsure where the include file is located, you can do the following:
+
+Linux:: Run this command in the terminal: `find /usr | grep my_include_file`
+Windows:: Search My Computer with the name of the include file, right-click on the file and select `Open file location`.
+
+
 === Crashes & Internal Errors
 
 If WhiteBox ever fails an assertion about its internal condition, it should leave an error message on the terminal:
@@ -453,22 +481,22 @@ image::gui_error_box.png[]
 This error box will also appear. `Abort` will close WhiteBox, `Retry` will pause execution if connected to a debugger, `Ignore` will try to continue running even though the assertion failed.
 It's not recommended to `Ignore` as data may be corrupted.
 
-WhiteBox crashed when I opened it ::
+==== WhiteBox crashed when I opened it
 You probably tried to open and connect to multiple instances of WhiteBox simultaneously, this is currently not supported.
 You may have luck specifying the port number by opening WhiteBox with `--port <portnum>` and modifying the port number in your plugin accordingly.
 
-A series of actions causes WhiteBox to crash ::
+==== A series of actions causes WhiteBox to crash
 If you run WhiteBox with `--record-actions <filename>`, it will record a log of the actions you took to the given filename.
 If the bug is repeatable (i.e. it happens consistently every time you do the same actions), it should hopefully be recreated
 if you run WhiteBox again with `--replay-actions <filename>`.
 If it does, please send this to us as well to help with debugging efforts.
 
-WhiteBox is not responding ::
+==== WhiteBox is not responding
 Consider whether the code you're running has hit an infinite loop.
 You may have to manually force close WhiteBox and reopen it.
 (Making running code cancellable is something to be added shortly.)
 
-A particular function caller is causing WhiteBox to hang or consistently crash ::
+==== A particular function caller is causing WhiteBox to hang or consistently crash
 If it is not possible to edit the function caller through WhiteBox because it keeps trying to run before you can change anything, there are 2 potential fixes:
 
 . Delete the `whitebox.db` database file. WhiteBox will create a fresh database if it cannot find an existing one.
