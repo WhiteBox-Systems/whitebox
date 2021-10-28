@@ -43,11 +43,20 @@ The first thing to do is to install the plugin for your editor so that WhiteBox 
 
 Once you've installed it, you can connect it to WhiteBox and start editing code!
 
-// TODO: library installation
-TIP: If installing on Linux, run the following commands from the `whitebox` directory: +
+
+=== Additional Linux Setup
+. To make sure the executables can run properly, run the following commands from the `whitebox` directory: +
 `chmod +x whitebox` +
 `chmod +x dbg_run` +
-This will ensure the executables can run properly.
+
+. Try running `./whitebox` from the terminal to see if the executable will open.
+You may get an error saying that you're missing some libraries.
+If so, install them with your plugin's package manager, for example on Ubuntu: +
+`apt-get install libglfw3`
+// TODO: list of libraries?
+
+. Continue with the plugin setup as normal.
+
 
 === Editor plugin setup
 WhiteBox can connect to several editors via a plugin.
