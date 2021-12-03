@@ -238,13 +238,13 @@ int square_factorial_root(FacRoot *result, int n) {
 
 
 .Typical View of Main Screen
-image::gui_main.png[]
+image::img/gui_main.png[]
 
 <<<
 === Function Caller
 
 .Function Caller: Code Specifying Inputs to Function
-image::gui_function_caller.png[]
+image::img/gui_function_caller.png[]
 
 This is the area in which you provide arguments for the function you are editing.
 It is just a straightforward code block, so it can call the function multiple times or include features like loops.
@@ -276,7 +276,7 @@ square_factorial_root(result, n);
 <<<
 === Black Box
 .Black Box: Function Input/Output
-image::gui_black_box.png[]
+image::img/gui_black_box.png[]
 This shows what outputs were produced by calling the function with the given inputs.
 
 It shows the state of the argument variables at the point in time that the function was called (including for pointer dereferences),
@@ -292,7 +292,7 @@ See the next section for explanation of the table's columns.
 === Data Tree
 
 .Data Tree with Multiple Changes at the Cursor "Breakpoint"
-image::gui_data_tree.png[]
+image::img/gui_data_tree.png[]
 
 This is a view similar to the 'Watch' window in a normal debugger, with a few extra features.
 
@@ -301,7 +301,7 @@ For loops, this results in multiple values being shown: one for each iteration. 
 Red values indicate what has just changed at the cursor "breakpoint".
 
 .List of Value Changes for Data Tree Expressions
-image::gui_data_tree_changes_graph.png[]
+image::img/gui_data_tree_changes_graph.png[]
 Because WhiteBox has recorded all of the data changes over time, it can show every value that a variable had. If the variable is a number (e.g. `int`, `float`, `uint8_t`), you can also graph the changes.
 
 <<<
@@ -324,7 +324,7 @@ Expand this element to see all of the recorded changes to the expression
 ==== Display options
 
 .Context Menu in Data Tree
-image::gui_data_tree_options.png[]
+image::img/gui_data_tree_options.png[]
 
 Right clicking on an expression brings up a context menu to customize options specific to that expression.
 Right clicking anywhere else on the table lets you customize the global options, which apply unless overrided by expression-specific options.
@@ -349,7 +349,7 @@ arrays: declared length
 === Timeline
 
 .Timeline of Data Changes Per Expression; Highlighted Cursor Position(s)
-image::gui_timeline.png[]
+image::img/gui_timeline.png[]
 
 The timeline is one of the more unusual features in WhiteBox.
 It is somewhat similar to the timeline in a video editor: the X-axis corresponds to discretized time and the Y-axis has a number of separate tracks.
@@ -385,8 +385,8 @@ The X- and Y-axis scales can both be edited manually with the `Scale` sliders
 
 
 === Status bar
-image::gui_status_bar.png[]
-image::gui_status_bar_error.png[]
+image::img/gui_status_bar.png[]
+image::img/gui_status_bar_error.png[]
 
 Indicates issues during connection, compiling or runtime.
 The colour indicates severity.
@@ -486,7 +486,7 @@ Assertion failed in `function_name` - ../app.c(123): <2>
 It should also produce a dump file (`<timestamp>.dmp`). +
 Please relay these back to us along with any other bug information to help us fix the issue faster.
 
-image::gui_error_box.png[]
+image::img/gui_error_box.png[]
 This error box will also appear. `Abort` will close WhiteBox, `Retry` will pause execution if connected to a debugger, `Ignore` will try to continue running even though the assertion failed.
 It's not recommended to `Ignore` as data may be corrupted.
 
