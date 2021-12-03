@@ -8,6 +8,7 @@ jobs:
       uses: docker://takanabe/github-actions-automate-projects:v0.0.1
       if: github.event_name == 'issues' && github.event.action == 'opened'
       env:
+        DEBUG: true
         GITHUB_TOKEN: ${{ secrets.AUTOMATION_SECRET }}
         GITHUB_PROJECT_URL: https://github.com/orgs/WhiteBox-Systems/projects/1
         GITHUB_PROJECT_COLUMN_NAME: Pending
