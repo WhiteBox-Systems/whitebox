@@ -14,7 +14,7 @@ on:
       - closed
 jobs:
   issue_opened_and_reopened:
-    name: issue_opened_and_reopened
+    name: Issue Opened/Reopened
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
     steps:
@@ -27,7 +27,7 @@ jobs:
           resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Pending"
   issue_closed:
-    name: issue_closed
+    name: Issue Closed
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'closed'
     steps:
