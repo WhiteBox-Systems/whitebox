@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
     steps:
-      - name: 'Move issue to "Todo"'
+      - name: 'Move issue to "Pending"'
         uses: leonsteinhaeuser/project-beta-automations@v1.0.2
         with:
           gh_token: ${{ secrets.AUTOMATION_SECRET }}
