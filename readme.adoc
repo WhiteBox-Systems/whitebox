@@ -28,7 +28,7 @@ Currently supported editors ::
 - 4coder
 - Emacs
 - Notepad++
-- Vim
+- Vim/Neovim
 
 Currently supported platforms ::
 - Windows x86-64
@@ -170,17 +170,19 @@ You can also check whether this instance of Notepad++ is connected to WhiteBox b
 
 
 <<<
-==== Vim
+==== Vim/Neovim
 ===== Install
-_Location:_ `whitebox/editor_plugins/whitebox-vim`
+_Vim Location:_ `whitebox/editor_plugins/whitebox-vim`
+_Neovim Location:_ `whitebox/editor_plugins/whitebox-nvim`
 
 If you’re using a particular plugin manager then follow the normal instructions for that.
 
-Otherwise add this line to your .vimrc (and edit the path as needed):
+Otherwise add the corresponding line to your .vimrc (and edit the path as needed):
 
 [source,vim]
 ----
 source C:\Program Files\whitebox\editor_plugins\whitebox-vim\plugin\whitebox.vim
+source C:\Program Files\whitebox\editor_plugins\whitebox-nvim\plugin\whitebox.vim
 ----
 
 ===== Connect
