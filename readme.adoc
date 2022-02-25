@@ -200,8 +200,8 @@ You can also check whether this instance of Vim is connected to WhiteBox by runn
 ===== Install
 *Location:* `whitebox/editor_plugins/sublime`
 
-To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`
-Open the parent folder `sublime-text` (or `sublime-text-3`) then open the `Installed Packages` folder
+To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`. 
+Open the parent folder `sublime-text` (or `sublime-text-3`) then open the `Installed Packages` folder. 
 Place `whitebox.sublime-package` into the `Installed Packages` folder
 
 ===== Connect
@@ -210,7 +210,7 @@ Place `whitebox.sublime-package` into the `Installed Packages` folder
 
 ===== Other Commands
 WhiteBox will automatically disconnect from the editor when closed.
-To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`, which will disconnect and close WhiteBox.
+To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`, which will disconnect and close WhiteBox. 
 While connected, "WhiteBox Connected" will show in the Sublime Text status bar. If an attempt to connect to WhiteBox failed, a status message "Failed to connect to WhiteBox" will briefly appear in the status bar.
 
 <<<
