@@ -202,8 +202,7 @@ You can also check whether this instance of Vim is connected to WhiteBox by runn
 *Location:* `whitebox/editor_plugins/sublime`
 
 To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`. 
-Open the parent folder `sublime-text` (or `sublime-text-3`) then open the `Installed Packages` folder. 
-Place `whitebox.sublime-package` into the `Installed Packages` folder
+Open the parent folder and place `whitebox.sublime-package` into the `Installed Packages` folder
 
 ===== Connect
 . Make sure WhiteBox is open
