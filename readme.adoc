@@ -29,6 +29,7 @@ Currently supported editors ::
 - Emacs
 - Notepad++
 - Vim/Neovim
+- Sublime Text
 
 Currently supported platforms ::
 - Windows x86-64
