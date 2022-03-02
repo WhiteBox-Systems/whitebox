@@ -28,8 +28,10 @@ Currently supported editors ::
 - 4coder
 - Emacs
 - Notepad++
-- Vim/Neovim
 - Sublime Text
+- Vim/Neovim
+- Visual Studio
+- VSCode
 
 Currently supported platforms ::
 - Windows x86-64
@@ -147,6 +149,23 @@ If you would like to disconnect manually, run `M-x whitebox-mode` again or run `
 You can also check whether this instance of Emacs is connected to WhiteBox by running `M-x whitebox-connection-check`
 
 
+<<<
+==== Sublime Text 3 and 4
+===== Install
+*Location:* `whitebox/editor_plugins/sublime`
+
+To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`.
+Open the parent folder and place `whitebox.sublime-package` into the `Installed Packages` folder
+
+===== Connect
+. Make sure WhiteBox is open
+. Navigate to the main menu at the top of the sublime window and press: `Tools > Connect to WhiteBox`
+
+===== Other Commands
+WhiteBox will automatically disconnect from the editor when closed.
+To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`, which will disconnect and close WhiteBox.
+While connected, "WhiteBox Connected" will show in the Sublime Text status bar. If an attempt to connect to WhiteBox failed, a status message "Failed to connect to WhiteBox" will briefly appear in the status bar.
+
 
 <<<
 ==== Notepad++
@@ -195,23 +214,29 @@ source C:\Program Files\whitebox\editor_plugins\whitebox-vim\plugin\whitebox.vim
 WhiteBox will automatically disconnect from the editor when closed.
 If you would like to disconnect manually, run `:call WhiteBoxDisconnect()`.
 You can also check whether this instance of Vim is connected to WhiteBox by running `:call WhiteBoxConnectionCheck()`
+
+
 <<<
-
-==== Sublime Text 3 and 4
+==== VSCode
 ===== Install
-*Location:* `whitebox/editor_plugins/sublime`
+_Location:_ `whitebox/editor_plugins/vscode`
 
-To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`. 
-Open the parent folder and place `whitebox.sublime-package` into the `Installed Packages` folder
+. Open VSCode
+. Open the Extensions pane (`View > Extensions`)
+. In the "..." menu, click "Install from VSIX..."
+. Select the `whitebox/editor_plugins/vscode/whitebox.vsix` file
 
 ===== Connect
 . Make sure WhiteBox is open
-. Navigate to the main menu at the top of the sublime window and press: `Tools > Connect to WhiteBox`
+. Open the command palette with `Ctrl + Shift + P`
+. Begin typing "WhiteBox: Connect" in the search bar and click the command when it appears.
+. You can also connect by clicking on the WhiteBox text in the status bar.
 
-===== Other Commands
+===== Other commands
 WhiteBox will automatically disconnect from the editor when closed.
-To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`, which will disconnect and close WhiteBox. 
-While connected, "WhiteBox Connected" will show in the Sublime Text status bar. If an attempt to connect to WhiteBox failed, a status message "Failed to connect to WhiteBox" will briefly appear in the status bar.
+If you would like to disconnect manually, open the command pallette (`Ctrl + Shift + P`), begin typing "WhiteBox: Disconnect" and click the command when it appears. Or simply click the status text at the bottom of the window to toggle the connection.
+The current connection status is displayed at all times in the status bar.
+
 
 <<<
 === Interaction flow overview
@@ -509,7 +534,7 @@ It's not recommended to `Ignore` as data may be corrupted.
 
 ==== WhiteBox crashed when I opened it
 You probably tried to open and connect to multiple instances of WhiteBox simultaneously, this is currently not supported.
-You may have luck specifying the port number by opening WhiteBox with `--port <portnum>` and modifying the port number in your plugin accordingly.
+If you need multiple simultaneous instances of WhiteBox, you may have luck specifying the port number by opening WhiteBox with `--port <portnum>` and modifying the port number in your plugin accordingly.
 
 ==== A series of actions causes WhiteBox to crash
 If you run WhiteBox with `--record-actions <filename>`, it will record a log of the actions you took to the given filename.
