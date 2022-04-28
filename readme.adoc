@@ -218,6 +218,24 @@ You can also check whether this instance of Vim is connected to WhiteBox by runn
 
 
 <<<
+==== Visual Studio
+===== Install
+_Location:_ `whitebox/editor_plugins/visual-studio`
+
+Double-click on `WhiteBoxPlugin.vsix` to open the installer, then follow its instructions.
+
+===== Connect
+. Make sure WhiteBox is open
+. Open the WhiteBox extension menu (`Menu Bar > Extensions > WhiteBox`)
+. Select `Connect`
+
+===== Other commands
+WhiteBox will automatically disconnect from the editor when closed.
+If you would like to disconnect manually, follow the same method as above but select `Disconnect`.
+You can check the connection status at any time by selecting `Is Connected?`.
+
+
+<<<
 ==== VSCode
 ===== Install
 _Location:_ `whitebox/editor_plugins/vscode`
