@@ -154,8 +154,9 @@ You can also check whether this instance of Emacs is connected to WhiteBox by ru
 ===== Install
 *Location:* `whitebox/editor_plugins/sublime`
 
-To open the packages folder, navigate to the main menu at the top of the sublime window and press `Preferences > Browse Packages...`.
-Open the parent folder and place `whitebox.sublime-package` into the `Installed Packages` folder
+. Open the packages directory by going to `+Menu Bar > Preferences > Browse Packages...+`
+. Navigate to the parent directory
+. Copy or move `whitebox.sublime-package` to the `Installed Packages` directory
 
 ===== Connect
 . Make sure WhiteBox is open
@@ -223,7 +224,7 @@ _Location:_ `whitebox/editor_plugins/vscode`
 
 . Open VSCode
 . Open the Extensions pane (`View > Extensions`)
-. In the "..." menu, click "Install from VSIX..."
+. In the `...` menu, select `+Install from VSIX...+`
 . Select the `whitebox/editor_plugins/vscode/whitebox.vsix` file
 
 ===== Connect
