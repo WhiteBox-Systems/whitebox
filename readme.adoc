@@ -48,9 +48,8 @@ Once you've installed it, you can connect it to WhiteBox and start editing code!
 
 
 === Additional Linux Setup
-. To make sure the executables can run properly, run the following commands from the `whitebox` directory: +
-`chmod +x whitebox` +
-`chmod +x dbg_run` +
+. To make sure the executables can run properly, run the following commands from the `whitebox/whitebox_vX.YY.Z` directory: +
+`chmod +x whitebox dbg_run ../whitebox`
 
 . Try running `./whitebox` from the terminal to see if the executable will open.
 You may get an error saying that you're missing some libraries.
@@ -222,7 +221,8 @@ You can also check whether this instance of Vim is connected to WhiteBox by runn
 ===== Install
 _Location:_ `whitebox/editor_plugins/visual-studio`
 
-Double-click on `WhiteBoxPlugin.vsix` to open the installer, then follow its instructions.
+Double-click on `WhiteBox2019.vsix`/`WhiteBox2022.vsix` to open the installer, then follow its instructions.
+Use `WhiteBox2019` for versions up to and including VS2019 and `WhiteBox2022` for versions from VS2022 on.
 
 ===== Connect
 . Make sure WhiteBox is open
@@ -422,6 +422,9 @@ The colours of each track correspond to the datatype of the expression.
 
 There are vertical highlights on the timeline for each point in the execution where the cursor "breakpoint" was hit.
 
+The nested thin bars above and to the left of the timeline represent scopes. Scopes on the left correspond 1:1 with the lexical scopes (i.e. text-based; `{...}` -wrapped) in which variables are declared.
+The bars above the timeline show when scopes were active during runtime. That is to say the scopes are present whenever the execution (i.e. program counter; `$RIP`) went through them.
+
 .Timeline Navigation
 |===
 | *Control*                   | *Effect*
@@ -430,6 +433,8 @@ There are vertical highlights on the timeline for each point in the execution wh
 | `Ctrl + Scroll Up/Down`     | Zoom in/out (centred on cursor), changing the X-axis scale
 | `Middle-click + drag`       | Pan around
 | `Hover mouse over elements` | Show tooltip with expanded information
+| `Click on scope bar`        | Contract/expand this instance of the scope
+| `Ctrl-click on scope bar`   | Contract/expand every instance of the scope
 |===
 
 ////
@@ -442,7 +447,8 @@ There are vertical highlights on the timeline for each point in the execution wh
 `Hover mouse over elements` :: Show tooltip with expanded information
 ////
 
-The X- and Y-axis scales can both be edited manually with the `Scale` sliders
+The X- and Y-axis scales can both be edited manually with the `Scale` sliders.
+`Show/Hide out-of-scope vars` controls whether variables are filtered based on the scope that the editor's cursor is in.
 
 
 === Status bar
@@ -477,8 +483,11 @@ Fortunately clang includes most of the extensions provided by other compilers.
 [cols="1,6"]
 |===
 | *Menu Item* | *Explanation*
+| `Pause` | .
 | `Recompile` | Manually trigger a recompile and rerun, in case something hasn't updated properly. +
 If you have to use this, something has probably gone wrong, so please let us know.
+| `Reset` | .
+| `Hard Reset` | .
 | `Preferences` | Opens a new menu for determining compiler flags, object files and DLLs/shared objects
 | `Root file` | The file that gets passed to the internal compiler. +
 By default WhiteBox will use the file you're editing, however you may have your code structured as a unity build and be editing a file that has been `#included` by another. +
@@ -498,9 +507,19 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Execution timeline` | Show what LLVM IR instructions were run, in order
 | `Registers window`   | Show all the register values at each sample
 | `Debug Info Entries` | Show all the information nodes in the DWARF debug data tree
-| `Functions Compiled` | List the functions currently compiled (lazily or eagerly) and any breakpoints placed
+| `Functions`          | List the functions currently compiled (lazily or eagerly) and some basic stats about them
+| `Scopes`             | Compare the multiple different representations of scopes from the AST and debug info, as well as when they were entered at runtime.
+| `Instructions`       | LLVM IR instructions and their basic info
 | `SQL Status`         | Show miscellaneous information about the SQL database
 | `LUV texture`        | Explore the LUV colourspace used for the timeline colours
+|===
+
+=== Help
+[cols="1,4"]
+|===
+| *Menu Item*          | *Explanation*
+| `Open README`        | Opens the readme.pdf file. (NB: a readme.html file is also in the app folder if you prefer).
+| `Interactive help`   | Adds a tooltip to your cursor that provides extra information about any GUI element you hover over.
 |===
 
 
@@ -578,6 +597,6 @@ If it is not possible to edit the function caller through WhiteBox because it ke
 // (((TERM1, TERM2...))) for hidden index terms
 
 === Inconsistent feedback
-If WhiteBox stops behaving as expected, close, open, and reconnect to it again, and see if that fixes the issue.
+If WhiteBox stops behaving as expected, try `Menu > Hard Reset`, or close, open, and reconnect to it again, and see if that fixes the issue.
 Please mailto:bugs@whitebox.systems[email us^] a description of the problem either way.
 // ?subject=WhiteBox%20Bug Report,"WhiteBox version:\nOS (Windows/Linux):\nEditor:\nBug description:
