@@ -1,0 +1,72 @@
+name: Bug Report
+description: File a bug report
+title: "Fix ..."
+labels: ["- bug"]
+# assignees
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: |
+        Please give a brief summary of what happened (and what you would expect the "correct" behaviour to be).
+
+        Consider attaching screenshots/video to demonstrate the issue.
+        Drag & drop files here to attach.
+        (https://github.com/mmozeiko/wcap & https://github.com/michaelmob/WebMCam are tools you can use for video screen recording.)
+        Consider lowering the recording framerate or recompressing with ffmpeg if the files are too large.
+      placeholder: Tell us what happened!
+      value: |
+        Actual behaviour:
+
+        Expected behaviour:
+
+    validations:
+      required: true
+
+  - type: textarea
+    id: sys-details
+    attributes:
+      label: System/app details
+      description: |
+        Knowing what context the bug occurred in will help us track it down and fix it.
+
+        Select `WhiteBox Menu > Help > Copy config details to clipboard` and paste here (`ctrl+v`)
+      placeholder: Select `WhiteBox Menu > Help > Copy config details to clipboard` and paste here (ctrl-v)
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce the error
+      description: |
+        If we can generate the error ourselves it is much easier to understand its cause and then fix it.
+
+        Ideally this will include step-by-step instructions on how to recreate it, as well as a minimal reproducible code example (see https://stackoverflow.com/help/minimal-reproducible-example).
+      value: |
+        Steps to reproduce:
+          1.
+          2.
+          3.
+          ...
+
+        Does the error happen consistently with the above steps?
+          [Always/50%/10% of the time.]
+
+        Minimal reproducible code example:
+          [Copy & paste code / link to eg a gist of the code / drag a code file here to upload it.]
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Crash/log attachments & additional info
+      description: Additional information to help us track down and fix the bug
+      value: |
+        - [ ] crash dump file (much smaller if (g)-zipped)
+        - [ ] whitebox-log.txt file
+
+        Any additional information/comments:
+
