@@ -21,7 +21,7 @@ It makes feedback about how your code executes always-available alongside your f
 to help you to have a better mental model of your code, iterate on designs faster, and catch errors as you introduce them.
 
 WARNING: This is an early release of WhiteBox. It still contains bugs and doesn't yet have all the features planned.
-Reporting any issues you find will help us to fix them faster, so please email them to us at bugs@whitebox.systems.
+Reporting any issues you find will help us to fix them faster, so please email them to us at bugs@whitebox.systems or use `Help > File bug report...`.
 
 
 Currently supported editors ::
@@ -39,7 +39,7 @@ Currently supported platforms ::
 
 Language support ::
 - All versions of C supported by clang
-- Basic C++ features (classes, methods, namespaces, references). Please note that WhiteBox may crash or behave oddly if used with other C++ features.
+- Basic C\++ features (classes, methods, namespaces, references). Please note that WhiteBox may crash or behave oddly if used with other C++ features.
 
 == Getting Started
 The first thing to do is to install the plugin for your editor so that WhiteBox can stay updated on the code your working on.
@@ -482,14 +482,14 @@ Fortunately clang includes most of the extensions provided by other compilers.
 
 [cols="1,6"]
 |===
-| *Menu Item* | *Explanation*
-| `Pause` | .
-| `Recompile` | Manually trigger a recompile and rerun, in case something hasn't updated properly. +
+| *Menu Item*   | *Explanation*
+| `Pause`       | Pause execution of the compiler so you can browse other files in your editor
+| `Recompile`   | Manually trigger a recompile and rerun, in case something hasn't updated properly. +
 If you have to use this, something has probably gone wrong, so please let us know.
-| `Reset` | .
-| `Hard Reset` | .
+| `Reset`       | Reset the compiler, rebuild and re-run.
+| `Hard Reset`  | Clear all caches, rebuild and re-run completely from scratch.
 | `Preferences` | Opens a new menu for determining compiler flags, object files and DLLs/shared objects
-| `Root file` | The file that gets passed to the internal compiler. +
+| `Root file`   | The file that gets passed to the internal compiler. +
 By default WhiteBox will use the file you're editing, however you may have your code structured as a unity build and be editing a file that has been `#included` by another. +
 In this case the compiler may need access to functions and types included before the file you're editing.
 |===
@@ -512,14 +512,24 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Instructions`       | LLVM IR instructions and their basic info
 | `SQL Status`         | Show miscellaneous information about the SQL database
 | `LUV texture`        | Explore the LUV colourspace used for the timeline colours
+| `Lifetimes`          | Explore the tree of resource lifetimes
+| `Types`              | Type information summaries (separate from DIEs)
+| `Console info`       | Show debug info for the internal console
+| `Handles`            | Show the files and handles held by WhiteBox
+| `Trampolines`        | Trampolines used for lazy compilation
 |===
 
 === Help
 [cols="1,4"]
 |===
-| *Menu Item*          | *Explanation*
-| `Open README`        | Opens the readme.pdf file. (NB: a readme.html file is also in the app folder if you prefer).
-| `Interactive help`   | Adds a tooltip to your cursor that provides extra information about any GUI element you hover over.
+| *Menu Item*                        | *Explanation*
+| `Open README`                      | Opens the readme.pdf file. (NB: a readme.html file is also in the app folder if you prefer).
+| `Interactive help tooltips`        | Adds a tooltip to your cursor that provides extra information about any GUI element you hover over.
+| `File bug report...`               | Open the Bug Report form on the WhiteBox Systems GitHub page, autofilled with system details
+| `Copy config details to clipboard` | Copies details about the application and your system, useful context for helping us fix bugs
+| `Email us: hi@whitebox.systems...` | Open an email client to send us a message at \"hi@whitebox.systems\"+
+Please do let us know if you have any feedback, suggestions, questions or complaints!;
+
 |===
 
 
