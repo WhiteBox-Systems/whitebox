@@ -40,6 +40,7 @@ Currently supported platforms ::
 Language support ::
 - All versions of C supported by clang
 - Basic C\++ features (classes, methods, namespaces, references). Please note that WhiteBox may crash or behave oddly if used with other C++ features.
+  WhiteBox will currently fail to load files that include templates.
 
 == Getting Started
 The first thing to do is to install the plugin for your editor so that WhiteBox can stay updated on the code your working on.
@@ -313,6 +314,8 @@ It is just a straightforward code block, so it can call the function multiple ti
 When you first move your cursor into a function that WhiteBox hasn't seen before, WhiteBox will try to generate some valid default arguments to call the function with.
 It will reuse the last valid arguments if WhiteBox recognizes the function.
 
+NOTE: You can use code that calls any functions or modifies any global data that should be visible to your function. This includes symbols that haven't been declared yet.
+
 .Default Generated Function Caller
 [source%linenums,c]
 ----
@@ -426,16 +429,21 @@ The nested thin bars above and to the left of the timeline represent scopes. Sco
 The bars above the timeline show when scopes were active during runtime. That is to say the scopes are present whenever the execution (i.e. program counter; `$RIP`) went through them.
 
 .Timeline Navigation
+[cols="1,2"]
 |===
 | *Control*                   | *Effect*
 | `Scroll Up/Down`            | Move up/down
 | `Shift + Scroll Up/Down`    | Move left/right
-| `Ctrl + Scroll Up/Down`     | Zoom in/out (centred on cursor), changing the X-axis scale
+| `Ctrl + Scroll Up/Down`     | Zoom in/out (centred on mouse cursor), changing the X-axis scale
 | `Middle-click + drag`       | Pan around
 | `Hover mouse over elements` | Show tooltip with expanded information
 | `Click on scope bar`        | Contract/expand this instance of the scope
 | `Ctrl-click on scope bar`   | Contract/expand every instance of the scope
+| `Click(/drag) on the ruler` | Set the cursor in your editor to the location in your code that was being executed at that point in time
+(for supported editors)
 |===
+
+// TODO: editor support matrix
 
 ////
 .Timeline Navigation Controls
@@ -451,7 +459,7 @@ The X- and Y-axis scales can both be edited manually with the `Scale` sliders.
 `Show/Hide out-of-scope vars` controls whether variables are filtered based on the scope that the editor's cursor is in.
 
 
-=== Status bar
+=== Status bar and Internal console
 image::img/gui_status_bar.png[]
 image::img/gui_status_bar_error.png[]
 
@@ -460,18 +468,46 @@ The colour indicates severity.
 See <<Status Feedback>> for more details.
 
 
+Clicking on the status bar or dragging it up will open the internal console.
+It shows information from WhiteBox and its internal compiler, as well as output on `stdout` & `stderr` captured from user code (e.g. from `printf`).
+
+NOTE: If multiple `stdout` and `stderr` calls happen in sequence, they may be grouped by stream, not necessarily in the order the functions were called.
+
+
 == Status Feedback
 The status of the WhiteBox and the actions it takes is presented in 3 ways:
 
 [cols="1,4"]
 |===
-| *Feedback method* | *Information type*
-| Window title bar  | Editor connection status
-| GUI status bar    | Issues from recent connection/compilation/run attempt
-| Terminal          | Extended error information, particularly compilation error messages and warnings
+| *Feedback method*                  | *Information type*
+| Window title bar                   | Editor connection status
+| GUI status bar                     | Issues from recent connection/compilation/run attempt
+| System terminal & internal console | Extended error information, particularly compilation error messages and warnings
 |===
 
 
+<<<
+== Window Docking
+WhiteBox windows can be stacked onto a single pane with tabs, and they can also be arbitrarily rearranged and "docked".
+
+They are moved around by their title bar and depending on where they are placed, they will be arranged in one of three ways:
+. They can be left as "floating"
+. They can be put in a "stack" of windows, with one tab per window in the stack.
+. They can be "split"/"tiled" with another window, so when one is resized smaller, the other fills in the space.
+
+.While docking a stack of 2 windows (Data & Timeline) to the right of Black Box
+image::img/gui_docking.png[]
+
+<1> The stack being moved contains the Data and the Timeline windows
+<2> Releasing the cursor over this centre option stacks the window(s) being moved with the window(s) underneath.
+<3> The current cursor position for this screenshot. Releasing the cursor over this right option "splits" the window underneath and puts the dragged window to the right.
+<4> The blue highlight shows where the dragged window will end up if the cursor is released. wu
+
+.After docking the Data & Timeline stack to the right of Black Box
+image::img/gui_docking_after.png[]
+
+
+<<<
 == Menus
 
 === Compiler
@@ -494,7 +530,48 @@ By default WhiteBox will use the file you're editing, however you may have your 
 In this case the compiler may need access to functions and types included before the file you're editing.
 |===
 
-// TODO: ==== Preferences
+<<<
+==== Preferences
+===== Layout & Profiles
+.Compiler flags tab for the default profile on the Preferences window
+image::img/gui_preferences_default.png[]
+
+Each profile contains a set of compiler flags, object files and DLL files.
+If you change the profile, all of these change at once.
+
+A default profile is generated with paths based on your system.
+You cannot edit the default profile.
+
+<1> This dropdown lets you select a profile.
+<2> To create a new profile you can edit, clone an existing profile.
+
+<<<
+===== New Profile
+.View of a New Profile after cloning the default profile. One argument group has been disabled.
+image::img/gui_preferences_clone.png[]
+Arguments can be grouped. This is to let you organise them in any way that makes sense to you.
+
+<1> For profiles other than the default, The profile can be renamed or deleted. (Any profile can be cloned.)
+<2> Argument groups can be individually disabled (e.g. a set of warnings).
+<3> Argument groups can be removed entirely.
+<4> New argument groups can be added.
+<5> For all profiles, there is a dropdown preview of the arguments that will get sent to the compiler.
+
+<<<
+===== DLL files & prefixes
+.DLL files tab of the New Profile, showing how argument group prefixes work
+image::img/gui_preferences_dll.png[]
+You can change to editing DLL files by clicking on the `DLL files` tab.
+
+<1> This is an example of setting an argument group's prefix. (This can be set for any argument group.)
+<2> The preview shows how all the file names in the argument group are appended to the prefix to make full paths.
+
+DLL functions get loaded and run successfully, however global data in DLLs currently does not work (will look like garbage data).
+The exception to this is `stdout`, `stderr` and `stdin` on Linux. (These are actually macros to function calls on Windows, so also work fine there).
+
+<<<
+=== Windows
+Open or close any of WhiteBox's primary windows.
 
 === Internals
 Miscellaneous views on some of WhiteBox's internals.
@@ -519,6 +596,7 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Trampolines`        | Trampolines used for lazy compilation
 |===
 
+<<<
 === Help
 [cols="1,4"]
 |===
@@ -529,9 +607,17 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Copy config details to clipboard` | Copies details about the application and your system, useful context for helping us fix bugs
 | `Email us: hi@whitebox.systems...` | Open an email client to send us a message at \"hi@whitebox.systems\"+
 Please do let us know if you have any feedback, suggestions, questions or complaints!;
-
 |===
 
+=== Features
+Experimental/unfinished features that can be enabled/altered.
+You are welcome to play around with them, but they are likely to be unstable.
+These reset to the most stable default every time WhiteBox starts up, but they can also be set from the command line.
+
+`Multiple statements per line`, `Show in-scope variables only`, `Timeline registers`, and `Timeline scopes` are relatively stable.
+
+`Store history of functions` allows you to compare multiple runs of a given function, across multiple edits as well as multiple calls.
+It is not currently very memory efficient, so beware if you try to use it!
 
 == Troubleshooting
 
@@ -543,11 +629,9 @@ This may be because the file doesn't exist, but it is more likely that the direc
 To add the directory to the include paths, go to `Main menu > Compiler > Preferences`, and add a compiler flag such as:
 
 ----
--I <1>
-/path/to/include/file/directory <2>
+-I /path/to/include/file/directory <1>
 ----
-<1> Make sure that there is a newline between the `-I` and the path.
-<2> This is the path to the directory for the file, not to the file itself.
+<1> This is the path to the directory for the file, not to the file itself.
 
 
 If you are unsure where the include file is located, you can do the following:
@@ -606,6 +690,7 @@ If it is not possible to edit the function caller through WhiteBox because it ke
 // ((TERM)) for inline index terms
 // (((TERM1, TERM2...))) for hidden index terms
 
+<<<
 === Inconsistent feedback
 If WhiteBox stops behaving as expected, try `Menu > Hard Reset`, or close, open, and reconnect to it again, and see if that fixes the issue.
 Please mailto:bugs@whitebox.systems[email us^] a description of the problem either way.
