@@ -114,6 +114,40 @@ You can also check whether this instance of 4coder is connected to WhiteBox with
 
 
 <<<
+==== 10x
+===== Install
+====== Automatic installation
+
+Click on `Install Plugin` to have WhiteBox automatically copy the plugin into 10x's scripts folder.
+
+====== Manual installation
+
+_File:_ `whitebox/editor_plugins/10x/WhiteBox.py`
+
+If automatic installation fails or is unavailable, you can manually install the 10x plugin by copying the `Whitebox.py` file into 10x's scripts folder.
+
+10x stores its plugin scripts in the folder `%AppData%\10x\PythonScripts\`, which typically evaluates to:
+
+`C:\Users\<username>\AppData\Roaming\10x\PythonScripts\`
+
+(Make sure to edit the path to replace `<username>` with your user name as needed.)
+
+After copying `WhiteBox.py` into that folder, restart 10x to detect the plugin.
+
+===== Connect
+
+. Make sure WhiteBox is open
+. In 10x, click `Tools > Execute Command` or press `Ctrl + Shift + X`
+. Type `WhiteBoxConnect()`
+. The connection status will appear in the 10x status bar in the lower left
+
+===== Other commands
+WhiteBox will automatically disconnect from the editor when closed.
+If you would like to disconnect manually, execute `WhiteBoxDisconnect()`.
+You can also check whether this instance of 10x is connected to WhiteBox by executing `WhiteBoxConnectionCheck()`.
+
+
+<<<
 ==== Emacs
 ===== Install
 _Location:_ `whitebox/editor_plugins/emacs`
@@ -146,7 +180,7 @@ M-x load-file /path/to/whitebox/editor_plugins/emacs/whitebox.el
 ===== Other commands
 WhiteBox will automatically disconnect from the editor when closed.
 If you would like to disconnect manually, run `M-x whitebox-mode` again or run `M-x whitebox-disconnect`.
-You can also check whether this instance of Emacs is connected to WhiteBox by running `M-x whitebox-connection-check`
+You can also check whether this instance of Emacs is connected to WhiteBox by running `M-x whitebox-connection-check`.
 
 
 <<<
@@ -187,7 +221,7 @@ Copy the whitebox folder (the folder itself, not just the contents) into the plu
 ===== Other commands
 WhiteBox will automatically disconnect from the editor when closed.
 If you would like to disconnect manually, follow the same method as above but select `Disconnect`.
-You can also check whether this instance of Notepad++ is connected to WhiteBox by selecting `Is connected?`
+You can also check whether this instance of Notepad++ is connected to WhiteBox by selecting `Is connected?`.
 
 
 <<<
@@ -214,7 +248,7 @@ source C:\Program Files\whitebox\editor_plugins\whitebox-vim\plugin\whitebox.vim
 ===== Other commands
 WhiteBox will automatically disconnect from the editor when closed.
 If you would like to disconnect manually, run `:call WhiteBoxDisconnect()`.
-You can also check whether this instance of Vim is connected to WhiteBox by running `:call WhiteBoxConnectionCheck()`
+You can also check whether this instance of Vim is connected to WhiteBox by running `:call WhiteBoxConnectionCheck()`.
 
 
 <<<
