@@ -50,7 +50,7 @@ Once you've installed it, you can connect it to WhiteBox and start editing code!
 
 === Additional Linux Setup
 . To make sure the executables can run properly, run the following commands from the `whitebox/whitebox_vX.YY.Z` directory: +
-`chmod +x whitebox dbg_run ../whitebox`
+`chmod +x whitebox dbg_run ../launch_whitebox`
 
 . Try running `./whitebox` from the terminal to see if the executable will open.
 You may get an error saying that you're missing some libraries.
@@ -198,7 +198,7 @@ You can also check whether this instance of Emacs is connected to WhiteBox by ru
 
 ===== Other Commands
 WhiteBox will automatically disconnect from the editor when closed.
-To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`, which will disconnect and close WhiteBox.
+To disconnect manually, do the same as above, but select `Tools > Disconnect From WhiteBox`.
 While connected, "WhiteBox Connected" will show in the Sublime Text status bar. If an attempt to connect to WhiteBox failed, a status message "Failed to connect to WhiteBox" will briefly appear in the status bar.
 
 
@@ -348,7 +348,9 @@ It is just a straightforward code block, so it can call the function multiple ti
 When you first move your cursor into a function that WhiteBox hasn't seen before, WhiteBox will try to generate some valid default arguments to call the function with.
 It will reuse the last valid arguments if WhiteBox recognizes the function.
 
-NOTE: You can use code that calls any functions or modifies any global data that should be visible to your function. This includes symbols that haven't been declared yet.
+WhiteBox makes a `WB_COUNTOF(array)` macro available to easily get the length of any arrays. This can be disabled in the right-click context menu.
+
+NOTE: You can use code that calls any functions or modifies any global data that should be visible to your function. This includes symbols that aren't declared before the inspected function.
 
 .Default Generated Function Caller
 [source%linenums,c]
@@ -359,6 +361,7 @@ int n = 0;
 square_factorial_root(result, n);
 ----
 
+<<<
 .Function Caller GUI Buttons
 [cols="1,4"]
 |===
@@ -368,6 +371,16 @@ square_factorial_root(result, n);
 | `List`    | View and load all saved callers
 | `Revert`  | Change the caller back to how it was when it was saved
 | `Default` | Re-generate the valid default arguments
+|===
+
+.Context Menu in Function Caller
+[cols="3,9,1"]
+|===
+| *Display option* | *Explanation* | *Default*
+| `Prevent WB_COUNTOF macro` | Prevents WhiteBox from defining the macro for determining array lengths | Off
+| `Lock caller`              | Keep the caller as-is when moving cursor between functions. +
+                               This is particularly useful to have e.g. `main()` as an entry point, and then jump between functions to see how
+                               they are used with all of the context of "real-world" use.  | Off
 |===
 
 
@@ -421,7 +434,7 @@ Expand this element to see all of the recorded changes to the expression
 <<<
 ==== Display options
 
-.Context Menu in Data Tree
+.Context Menu in Data Tree/Timeline
 image::img/gui_data_tree_options.png[]
 
 Right clicking on an expression brings up a context menu to customize options specific to that expression.
@@ -439,7 +452,8 @@ arrays: declared length
 | `Struct member names`                   | Always                                         | In the value preview, for structs/classes/unions, print the name of each member before its value                                                                    | `On`
 | `Data addresses`                        | Always                                         | Show the address of the expression, typically the equivalent of `&variable`                                                                                         | `Off`
 | `Show graphs`                           | Always                                         | Graph all of the changes for numerical values                                                                                                                       | `Off`
-| `<number base>`                         | Always                                         | Determine which base numerical values should be written in from [Decimal/10, Hexadecimal/16, Binary/2, Octal/8]                                                                                           | `Decimal`
+| `Integers`                              | Always                                         | Determine in which base to display integer values from [Decimal/10, Hexadecimal/16, Binary/2, Octal/8]                                                              | `Decimal`
+| `Floats`                                | Always                                         | Determine in which format to display floats from [Standard, Scientific, Compact, C99 Hexfloat, Int Hexfloat]                                                        | `Compact`
 |===
 
 
@@ -457,11 +471,18 @@ Gaps appear in the track when that expression/variable was not in scope.
 The colours of each track correspond to the datatype of the expression.
 // TODO: more?
 
-There are vertical highlights on the timeline for each point in the execution where the cursor "breakpoint" was hit.
+Primitive values are graphed on the timeline, scaled by the min and max (valid) values that have been recorded.
+
+There are vertical highlights on the timeline for each time the cursor's line was run.
+
+Lines, and their corresponding highlights, are half a sample offset from the data changes.
+It is useful to think of them as representing transitions between different program states.
+The program state immediately before the line executed is represented by the data on the left-hand edge of the highlight, and the right-hand edge correspondingly shows the program state immediately after the line executed.
 
 The nested thin bars above and to the left of the timeline represent scopes. Scopes on the left correspond 1:1 with the lexical scopes (i.e. text-based; `{...}` -wrapped) in which variables are declared.
 The bars above the timeline show when scopes were active during runtime. That is to say the scopes are present whenever the execution (i.e. program counter; `$RIP`) went through them.
 
+<<<
 .Timeline Navigation
 [cols="1,2"]
 |===
@@ -471,26 +492,57 @@ The bars above the timeline show when scopes were active during runtime. That is
 | `Ctrl + Scroll Up/Down`     | Zoom in/out (centred on mouse cursor), changing the X-axis scale
 | `Middle-click + drag`       | Pan around
 | `Hover mouse over elements` | Show tooltip with expanded information
-| `Click on scope bar`        | Contract/expand this instance of the scope
-| `Ctrl-click on scope bar`   | Contract/expand every instance of the scope
+// | `Click on scope bar`        | Contract/expand this instance of the scope
+// | `Ctrl-click on scope bar`   | Contract/expand every instance of the scope
 | `Click(/drag) on the ruler` | Set the cursor in your editor to the location in your code that was being executed at that point in time
 (for supported editors)
+| `Space`                     | Pause/continue execution (& compilation)
 |===
 
 // TODO: editor support matrix
 
-////
-.Timeline Navigation Controls
-[horizontal]
-`Scroll Up/Down`            :: Move up/down
-`Shift + Scroll Up/Down`    :: Move left/right
-`Ctrl + Scroll Up/Down`     :: Zoom in/out (centred on cursor), changing the X-axis scale
-`Middle-click + drag`       :: Pan around
-`Hover mouse over elements` :: Show tooltip with expanded information
-////
+.Additional timeline context menu items
+[cols="3,9,3"]
+|===
+| *Display option* | *Explanation* | *Default*
+| `Show CPU registers`          | Add rows for each of the general-purpose CPU registers (e.g. `RAX`, `RIP`) | Off
+| `Show out-of-scope variables` | Don't limit shown variables by the scope the cursor is in; show variables from all scopes | Off
+| `Scale`                       | Manually edit the timeline's X- and Y-axis scales | X=1, Y=25
+|===
 
-The X- and Y-axis scales can both be edited manually with the `Scale` sliders.
-`Show/Hide out-of-scope vars` controls whether variables are filtered based on the scope that the editor's cursor is in.
+
+<<<
+=== Disassembly
+
+.Additional timeline context menu items
+[cols="3,9,3"]
+|===
+| *Display option*    | *Explanation* | *Default*
+| `Show code`         | Shows the line of code that corresponds to the disassembled instructions | On
+| `Show addresses`    | Show the machine code's location in memory (i.e. the RIP value when executing each instruction) | On
+| `Show bytes`        | Show the hexadecimal values of the bytes in the instruction | On
+| `Show heatmap for +
+instructions hit`     | Show & colour a bar chart for the number of times each instruction was run | Off
+| `Scroll to follow +
+cursor location`        | Centres the disassembly corresponding to the editor's cursor's line | Off
+|===
+
+
+
+<<<
+=== Console
+
+The in-built console will provide feedback from WhiteBox, as well as show you the output of code printed to `stdout` & `stderr` in user code.
+
+You can scroll left/right with `Shift + Scroll Up/Down` (as per the timeline).
+
+.Console context menu items
+[cols="3,9,3"]
+|===
+| *Display option*    | *Explanation* | *Default*
+| `Wrap long lines`   | On: wrap lines so all text is visible. +
+                        Off: wrap only when there is a newline printed. | On
+|===
 
 
 === Status bar and Internal console
@@ -518,6 +570,7 @@ The status of the WhiteBox and the actions it takes is presented in 3 ways:
 | GUI status bar                     | Issues from recent connection/compilation/run attempt
 | System terminal & internal console | Extended error information, particularly compilation error messages and warnings
 |===
+
 
 
 <<<
@@ -616,7 +669,7 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | *Menu Item*          | *Explanation*
 | `Pagelet viewer`     | Similar to `Memory` views in debuggers, this presents 2048-byte chunks of memory and all the changes they go through.
 | `Execution timeline` | Show what LLVM IR instructions were run, in order
-| `Registers window`   | Show all the register values at each sample
+| `Registers`          | Show all the register values at each sample
 | `Debug Info Entries` | Show all the information nodes in the DWARF debug data tree
 | `Functions`          | List the functions currently compiled (lazily or eagerly) and some basic stats about them
 | `Scopes`             | Compare the multiple different representations of scopes from the AST and debug info, as well as when they were entered at runtime.
@@ -628,7 +681,9 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Console info`       | Show debug info for the internal console
 | `Handles`            | Show the files and handles held by WhiteBox
 | `Trampolines`        | Trampolines used for lazy compilation
+| `Dependencies`       | Internal build system dependency tracking
 |===
+
 
 <<<
 === Help
@@ -655,7 +710,7 @@ It is not currently very memory efficient, so beware if you try to use it!
 
 == Troubleshooting
 
-=== Compilation Errors
+=== Build Errors
 
 ==== `#include <X>` file not found
 WhiteBox's internal compiler (clang) can't find the file.
@@ -672,6 +727,18 @@ If you are unsure where the include file is located, you can do the following:
 
 Linux:: Run this command in the terminal: `find /usr | grep my_include_file`
 Windows:: Search My Computer with the name of the include file, right-click on the file and select `Open file location`.
+
+==== `#error STL1000: Unexpected compiler version, expected Clang XX.0.0 or newer`
+WhiteBox currently uses Clang 11.
+You are probably using Visual Studio 2022 17.0 Preview 2 (or later) with the C\++ standard libraries.
+You can install a version of Visual Studio/BuildTools before this version (alongside the installed version), and point all the include paths in `Compiler > Preferences` towards the new version.
+For a quicker, potentially less stable fix, you can define `_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH` in `Compiler > Preferences`.
+
+==== `LLVM ERROR: ELF COMDATs only support...`
+WhiteBox currently uses ELF objects internally.
+If this is in response to including a standard library header, WhiteBox is unfortunately incompatible with certain code in MSVC's standard library.
+It appears to work with MSVC 14.28.29910 and earlier versions.
+You can install a compatible version of Visual Studio/BuildTools (alongside any current versions), and point all the include paths in `Compiler > Preferences` towards the new version.
 
 
 === Crashes & Internal Errors
@@ -691,11 +758,16 @@ Assertion failed in `function_name` - ../app.c(123): <2>
 <3> The condition that failed
 <4> An OS error number that may or may not be related to the issue in question.
 
-It should also produce a dump file (`<timestamp>.dmp`). +
+It should also produce a dump file (`whitebox-<timestamp>.dmp[.gz]`). +
 Please relay these back to us along with any other bug information to help us fix the issue faster.
 
 image::img/gui_error_box.png[]
-This error box will also appear. `Abort` will close WhiteBox, `Retry` will pause execution if connected to a debugger, `Ignore` will try to continue running even though the assertion failed.
+This error box will also appear.
+`Exit` will close WhiteBox,
+`File Bug` will open a GitHub issue with some system data filled in,
+`Debug` will pause execution if connected to a debugger,
+`Ignore` will try to continue running even though the assertion failed,
+`Always Ignore` will continue running & prevent the same error box appearing until the next time WhiteBox is started.
 It's not recommended to `Ignore` as data may be corrupted.
 
 ==== WhiteBox crashed when I opened it
@@ -707,11 +779,6 @@ If you run WhiteBox with `--record-actions <filename>`, it will record a log of 
 If the bug is repeatable (i.e. it happens consistently every time you do the same actions), it should hopefully be recreated
 if you run WhiteBox again with `--replay-actions <filename>`.
 If it does, please send this to us as well to help with debugging efforts.
-
-==== WhiteBox is not responding
-Consider whether the code you're running has hit an infinite loop.
-You may have to manually force close WhiteBox and reopen it.
-(Making running code cancellable is something to be added shortly.)
 
 ==== A particular function caller is causing WhiteBox to hang or consistently crash
 If it is not possible to edit the function caller through WhiteBox because it keeps trying to run before you can change anything, there are 2 potential fixes:
