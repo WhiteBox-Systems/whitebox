@@ -26,6 +26,7 @@ Reporting any issues you find will help us to fix them faster, so please email t
 
 Currently supported editors ::
 - 4coder
+- 10x
 - Emacs
 - Notepad++
 - Sublime Text
@@ -306,6 +307,7 @@ This is what a typical interaction might look like (it's not prescriptive).
 | Move your cursor around the function          | Show some location-dependent information (see <<GUI Overview>>)
 | Edit the code (without saving)                | Desaturate its feedback as it may no longer be valid (the location information may have changed)
 | Save the file                                 | Recompile and rerun the function being worked on
+| Add a watch expression to the timeline        | Show the value(s) that expression evaluates to during the function
 |===
 
 
@@ -483,6 +485,31 @@ The nested thin bars above and to the left of the timeline represent scopes. Sco
 The bars above the timeline show when scopes were active during runtime. That is to say the scopes are present whenever the execution (i.e. program counter; `$RIP`) went through them.
 
 <<<
+==== Watch expressions
+
+Simple watch expressions can now be added for custom selection of what to inspect.
+These are generally similar to watch expressions in other debuggers.
+
+These currently have a few limitations:
+
+1. Arithmetic operations are only supported for constants. +
+N.B. indexing pointers/arrays by constants is supported, which is arguably an exception.
+2. Any types that the watch expression uses (e.g. from casts) must exist in the debug info for the inspected function.
+This includes additional levels of pointer indirection.
+3. There is no mechanism for disambiguating a name collision/shadowing. WhiteBox defaults to choosing the variable in the root-most scope of the function, or otherwise finds the first global variable.
+4. They are only available for the timeline, not the `Data Tree`
+
+===== Registers
+Full-size general-purpose registers (`rax` etc) can be referenced with an optional preceding `&` or `_`, followed by the (case-insensitive) register name.
+
+The following are all valid:
+
+- `rax`
+- `$RAX`
+- `_rAx`
+
+
+<<<
 .Timeline Navigation
 [cols="1,2"]
 |===
@@ -505,9 +532,14 @@ The bars above the timeline show when scopes were active during runtime. That is
 [cols="3,9,3"]
 |===
 | *Display option* | *Explanation* | *Default*
-| `Show CPU registers`          | Add rows for each of the general-purpose CPU registers (e.g. `RAX`, `RIP`) | Off
+| `Show CPU registers`          | Add tracks for each of the general-purpose CPU registers (e.g. `RAX`, `RIP`) | Off
 | `Show out-of-scope variables` | Don't limit shown variables by the scope the cursor is in; show variables from all scopes | Off
+| `Show call stack`             | Adds tracks for an icicle-graph of function calls (current function at bottom). +
+Arguments & return values will be shown where captured | Off
+| `Show local variables`        | Automatic inclusion of all variables referenced within the function (including global variables). +
+This is best disabled if there is too much visual noise, and you'd prefer to just extract specific information with `Watch expressions`. | On
 | `Scale`                       | Manually edit the timeline's X- and Y-axis scales | X=1, Y=25
+| `Copy value to clipboard`     | Copy the value on the timeline bar to the clipboard (in its currently-displayed formatting) |
 |===
 
 
@@ -607,6 +639,8 @@ Fortunately clang includes most of the extensions provided by other compilers.
 |===
 | *Menu Item*   | *Explanation*
 | `Pause`       | Pause execution of the compiler so you can browse other files in your editor
+| `Rerun`       | Manually trigger a rerun. +
+N.B.: mutated globals *may* not be reset; use `Reset` if you need to be sure.
 | `Recompile`   | Manually trigger a recompile and rerun, in case something hasn't updated properly. +
 If you have to use this, something has probably gone wrong, so please let us know.
 | `Reset`       | Reset the compiler, rebuild and re-run.
@@ -615,6 +649,7 @@ If you have to use this, something has probably gone wrong, so please let us kno
 | `Root file`   | The file that gets passed to the internal compiler. +
 By default WhiteBox will use the file you're editing, however you may have your code structured as a unity build and be editing a file that has been `#included` by another. +
 In this case the compiler may need access to functions and types included before the file you're editing.
+| `Exit`        | Close WhiteBox.
 |===
 
 <<<
@@ -668,6 +703,7 @@ These are not expected or intended to be key debugging tools, but may be of inte
 |===
 | *Menu Item*          | *Explanation*
 | `Pagelet viewer`     | Similar to `Memory` views in debuggers, this presents 2048-byte chunks of memory and all the changes they go through.
+| `Breakpoints`        | All the memory locations that WhiteBox currently has breakpoints on for change tracking
 | `Execution timeline` | Show what LLVM IR instructions were run, in order
 | `Registers`          | Show all the register values at each sample
 | `Debug Info Entries` | Show all the information nodes in the DWARF debug data tree
@@ -682,6 +718,7 @@ These are not expected or intended to be key debugging tools, but may be of inte
 | `Handles`            | Show the files and handles held by WhiteBox
 | `Trampolines`        | Trampolines used for lazy compilation
 | `Dependencies`       | Internal build system dependency tracking
+| `Glyph Metrics`      | Visualizer for DirectWrite glyphs
 |===
 
 
